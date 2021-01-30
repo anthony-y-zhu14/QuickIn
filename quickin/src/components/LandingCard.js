@@ -23,11 +23,9 @@ export default function LandingCard({image, title, content, handleClick}) {
   return (
     <Card className={classes.root}>
       <CardActionArea onClick={() => handleClick()}>
-        <CardMedia
-          className={classes.media}
-          image={image}
-          title={title}
-        />
+        <CardMedia>
+            {image}
+        </CardMedia>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2" style={{color: '#000'}}>
             {title}
