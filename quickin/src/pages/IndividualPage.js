@@ -1,8 +1,8 @@
 import React from 'react';
-import {Fab, Typography, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField } from '@material-ui/core';
+import {Typography, Container, Grid, Zoom, Button, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IndividualForm from '../components/IndividualForm.js';
+import QrReader from 'react-qr-reader'
 
 const useStyles = makeStyles({
     root: {
@@ -24,7 +24,18 @@ const useStyles = makeStyles({
 
 export default function IndividualPage(action) {
     const [authenicated, setAuth] = React.useState(false);
+    const [scanResult, setResult] = React.useState(undefined);
     const classes = useStyles();
+
+    const handleScan = (data) => {
+        if (data) {
+            setResult(data);
+        }
+    }
+
+    const handleError = (err) => {
+        console.log(err);
+    }
 
     const logout = () => {
         setAuth(false);
@@ -54,6 +65,8 @@ export default function IndividualPage(action) {
                                 <Grid item xs={12}>
                                     <Container className={classes.cameraWindow}>
                                         <h1>This is where the camera window will be</h1>
+                                        <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>
+                                        <p>{scanResult}</p>
                                     </Container>
                                 </Grid>   
                                 <Grid item xs={12}>

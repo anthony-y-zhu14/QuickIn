@@ -53,9 +53,7 @@ export default function BusinessForm(action) {
                                 <Grid item xs={6}><TextField variant='outlined' label='Country'></TextField></Grid>
                             </Grid>           
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
-                                <Grid item>
-                                    <Fab variant='extended' color='primary' onClick={action.goBack}><ArrowBackIcon/>Back</Fab>  
-                                </Grid>   
+                         
                                 <Grid item>
                                     <Button onClick={() => setNext(true)} variant="contained" color='primary'>Next</Button>
                                 </Grid>               
@@ -65,7 +63,10 @@ export default function BusinessForm(action) {
                             </Grid>                   
                         </Grid>
                     </Paper> 
+                    <br />
+                    <Fab variant='extended' onClick={action.goBack} color='primary'><ArrowBackIcon/>Back</Fab>                                   
                 </Container>
+
             </Zoom>
     
         )

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Fab, Typography, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField, Fade } from '@material-ui/core';
+import {Fab, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -19,6 +19,14 @@ const useStyles = makeStyles({
 export default function IndividualForm(action) {
     const [login, setLogin] = React.useState(true);
     const [register, setRegister] = React.useState(false);
+    const [login_email, setlogin_email] = React.useState(undefined);
+    const [login_password, setlogin_password] = React.useState(undefined);
+    const [register_email, setregister_email] = React.useState(undefined);
+    const [register_password, setregister_password] = React.useState(undefined);
+    const [register_re_password, setregister_re_password] = React.useState(undefined);
+    const [register_firstName, setregister_firstName] = React.useState(undefined);
+    const [register_lastName, setregister_lastName] = React.useState(undefined);
+    const [register_phoneNumber, setregister_phoneNumber] = React.useState(undefined);
 
     const classes = useStyles();
 
@@ -33,11 +41,22 @@ export default function IndividualForm(action) {
     }
 
     const handleLogin = () => {
-        alert("login");
+        if (login_email && login_password) {
+            alert("login");
+        }
+        else alert("please fill all required field")
     }
 
+
+
     const handleRegister = () => {
-        alert("register");
+        if (register_email && register_firstName && register_lastName && register_password && register_phoneNumber && register_re_password && (register_re_password === register_password)) {
+            alert("register");
+        }
+        else if (register_re_password !== register_password) {
+            alert("same password pls") 
+        }
+        else alert("please fill all required field") 
     }
     
     return (
@@ -51,10 +70,10 @@ export default function IndividualForm(action) {
                     <Paper className={classes.form} elevation={3}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' label='Email'></TextField>
+                                <TextField variant='outlined' label='Email' value={login_email} onChange={(e)=>setlogin_email(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' label='Password' type='password'></TextField>
+                                <TextField variant='outlined' label='Password' type='password' value={login_password} onChange={(e)=>setlogin_password(e.target.value)}></TextField>
                             </Grid>                        
                             <Grid item xs={12}>
                                 <Button variant='contained' color='primary' onClick={handleLogin}>Submit</Button>
@@ -66,25 +85,25 @@ export default function IndividualForm(action) {
                         <Paper className={classes.form} elevation={3}>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='First Name'></TextField>
+                                <TextField variant='outlined' label='First Name' value={register_firstName} onChange={(e)=>setregister_firstName(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='Last Name'></TextField>
+                                <TextField variant='outlined' label='Last Name' value={register_lastName} onChange={(e)=>setregister_lastName(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='Phone Number'></TextField>
+                                <TextField variant='outlined' label='Phone Number' value={register_phoneNumber} onChange={(e)=>setregister_phoneNumber(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={6}></Grid>
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='Email'></TextField>
+                                <TextField variant='outlined' label='Email' value={register_email} onChange={(e)=>setregister_email(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={6}></Grid>
 
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='Password' type='password'></TextField>
+                                <TextField variant='outlined' label='Password' type='password' value={register_password} onChange={(e)=>setregister_password(e.target.value)}></TextField>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField variant='outlined' label='Re-enter Password' type='password'></TextField>
+                                <TextField variant='outlined' label='Re-enter Password' type='password' value={register_re_password} onChange={(e)=>setregister_re_password(e.target.value)}></TextField>
                             </Grid>                          
                             <Grid item xs={12}>
                                 <Button variant='contained' color='primary' onClick={handleRegister}>Submit</Button>

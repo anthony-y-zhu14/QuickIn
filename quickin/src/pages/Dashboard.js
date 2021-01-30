@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {Fab, Typography, Container, Grid, Button, Paper, TextField, Box, AppBar, Tabs, Tab } from '@material-ui/core';
+import QRCard from '../components/QRCard.js';
+import DataCard from '../components/DataCard.js';
+
+import {Fab, Typography, Container, Grid, Button, Paper, TextField, Box, AppBar, Tabs, Tab, Card, CardActions, CardContent} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 function TabPanel(props) {
@@ -49,15 +52,14 @@ export default function Dashboard() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
-
     return (
         <React.Fragment>
             <Paper className={classes.form} elevation={3}>
                 <Container maxWidth={'md'}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant={'h4'}>Welcome, BUSINESS_NAME</Typography>
-                        </Grid>
+                            <Typography variant={'h4'}>Welcome, Team Shonies</Typography>
+                        </Grid>        
                         <Grid item xs={12}>
                             <div className={classes.root}>
                                 <AppBar position="static">
@@ -68,10 +70,10 @@ export default function Dashboard() {
                                     </Tabs>
                                 </AppBar>
                                 <TabPanel value={value} index={0}>
-                                    Item One
+                                    <QRCard />
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
-                                    Item Two
+                                    <DataCard />
                                 </TabPanel>
                                 <TabPanel value={value} index={2}>
                                     Item Three

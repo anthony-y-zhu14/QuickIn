@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -37,10 +36,10 @@ export default function LandingPage() {
         return (
             <React.Fragment>
                 <Container maxWidth={'md'} className={classes.main}>
-                    <Typography variant={'h2'} style={{textAlign: 'center', padding: 40}}>Welcome to quickin.</Typography>
+                    <Typography variant={'h2'} style={{textAlign: 'center', padding: 40}}>Welcome to Quick-in.</Typography>
                     <Container>
                         <Typography variant={'body1'} style={{margin: 20}}>A simple check-in process that provides businesses with a
-                        fast, secure, and safe experience for collecting contact tracing information from customers.
+                        fast, secure, and safe experience for collecting contact information from customers.
                         </Typography>
                     </Container>
                     <Grid container spacing={2}>

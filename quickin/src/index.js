@@ -2,20 +2,37 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import {createMuiTheme, ThemeProvider } from "@material-ui/core";
 
-const theme = createMuiTheme({
-  palette:
-  {
+const colorTheme = createMuiTheme({
+  palette:  {
     primary: {
-    main: "#6C9FF8;"
+    main: "#6C9FF8;",
+    active: "#4f88ed",
+    contrastText: '#fff'
     },
     secondary: {
-    main: "#B8B9BD",
+    main: "#4f88ed",
     }
   },
-
+})
+const overridesTheme = createMuiTheme({
   overrides: {
+    MuiButton: {
+      contained: {
+      backgroundColor: colorTheme.palette.primary.main,
+      color: colorTheme.palette.primary.contrastText,
+      "&:hover": {
+        backgroundColor: colorTheme.palette.primary.active,
+      },
+      },
+      outlined: {
+        color: colorTheme.palette.primary.main,
+        "&:hover": {
+          backgroundColor: colorTheme.palette.primary.active,
+        },
+      },
+    },
     MuiOutlinedInput: {
       root: {
         position: "relative",
@@ -46,9 +63,15 @@ const theme = createMuiTheme({
   }
 })
 
+const themes = createMuiTheme({
+  palette: colorTheme.palette,
+  overrides: overridesTheme.overrides
+})
+
+
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={themes}>
       <App />
     </ThemeProvider>,
   </React.StrictMode>,
