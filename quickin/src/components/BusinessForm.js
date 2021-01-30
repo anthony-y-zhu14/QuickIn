@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Fab, Typography, Container, Grid, Button, Paper, Zoom, TextField } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -24,6 +25,63 @@ export default function BusinessForm(action) {
     const [isRegistered, setRegistered] = useState(false);
     const [isNext, setNext] = useState(false);
 
+    const [login, setLogin] = React.useState(true);
+    const [register, setRegister] = React.useState(false);
+    const [login_email, setlogin_email] = React.useState(undefined);
+    const [login_password, setlogin_password] = React.useState(undefined);
+    const [register_email, setregister_email] = React.useState(undefined);
+    const [register_password, setregister_password] = React.useState(undefined);
+    const [register_re_password, setregister_re_password] = React.useState(undefined);
+    const [register_businessName, setregister_businessName] = React.useState(undefined);
+    const [register_addressOne, setRegister_addressOne] = React.useState(undefined);
+    const [register_addressTwo, setRegister_addressTwo] = React.useState(undefined);
+    const [register_postalCode, setRegister_postalCode] = React.useState(undefined);
+    const [register_city, setRegister_city] = React.useState(undefined);
+    const [register_province, setRegister_province] = React.useState(undefined);
+    const [register_country] = React.useState('Canada');
+    const [register_phoneNumber, setRegister_phoneNumber] = React.useState(undefined);
+
+    const handleRegister = () => {
+        if (register_password && register_re_password && (register_re_password === register_password)) {
+            attemptRegister();
+        }
+        else if (register_re_password !== register_password) {
+            alert("same password pls") 
+        } else alert('Please fill out all form fields to continue.');
+    }
+
+    const handleNext = () => {
+        if (register_email && register_businessName && register_phoneNumber && register_addressOne && register_postalCode && register_city && register_province && register_country) {
+            setNext(true);
+        } else { alert('Please fill out all form fields to continue.'); }
+    }
+
+    async function attemptRegister() {
+        if(!register_addressTwo) {
+            setRegister_addressTwo('N/A');
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                email: register_email, 
+                password: register_password, 
+                phoneNumber: register_phoneNumber,
+                businessName: register_businessName,
+                addressOne: register_addressOne,
+                addressTwo: register_addressTwo,
+                city: register_city,
+                postalCode: register_postalCode,
+                province: register_province
+            })
+        };
+        const response = await fetch('/business/register', requestOptions);
+        const data = await response.json();
+        if (data.authentication === true) {
+            action.auth('true'); 
+        }               
+    }
+
 
     if(!isRegistered && !isNext) {
         return (
@@ -35,27 +93,21 @@ export default function BusinessForm(action) {
                      <span onClick={() => setRegistered(true)} style={{color: 'blue', textDecoration: 'underline', paddingLeft: 3}}>Login.</span>
                     </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Business Name'></TextField>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Email'></TextField>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Phone Number'></TextField>
-                            </Grid> 
+                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setregister_businessName(e.target.value)} label='Business Name' /></Grid>
+                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setregister_email(e.target.value)} label='Email' /></Grid>
+                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_phoneNumber(e.target.value)} label='Phone Number'/></Grid> 
                             <Grid container spacing={2} style={{marginTop: 20}}>
-                                <Grid item xs={6}><TextField variant='outlined' label='Address Line 1'></TextField></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' label='Address Line 2'></TextField></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' label='Postal Code'></TextField></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' label='City'></TextField></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' label='Province / Territory'></TextField></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' label='Country'></TextField></Grid>
+                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_addressOne(e.target.value)} label='Address Line 1' /></Grid>
+                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_addressTwo(e.target.value)} label='Address Line 2' /></Grid>
+                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_postalCode(e.target.value)} label='Postal Code' /></Grid>
+                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_city(e.target.value)} label='City' /></Grid>
+                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_province(e.target.value)} label='Province / Territory' /></Grid>
+                                <Grid item xs={6}><TextField disabled={'true'} variant='outlined' label='Canada' /></Grid>
                             </Grid>           
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
                          
                                 <Grid item>
-                                    <Button onClick={() => setNext(true)} variant="contained" color='primary'>Next</Button>
+                                    <Button onClick={() => handleNext()} variant="contained" color='primary'>Next</Button>
                                 </Grid>               
                             </Grid>        
                             <Grid item xs={12}>
@@ -109,17 +161,17 @@ export default function BusinessForm(action) {
                     <Typography variant={'h3'} style={{margin: '2%'}}>Let's get your business setup.</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password' label='Password'></TextField>
+                                <TextField variant='outlined' type='password' onChange={(e)=>setregister_password(e.target.value)} label='Password'></TextField>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password'  label='Confirm Password'></TextField>
+                                <TextField variant='outlined' type='password'  onChange={(e)=>setregister_re_password(e.target.value)} label='Confirm Password'></TextField>
                             </Grid>
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
                                 <Grid item>
                                     <Button onClick={() => setNext(false)} variant="contained" color='primary'>Back</Button>
                                 </Grid>               
                                 <Grid item>
-                                    <Button variant="contained" color='primary'>Login</Button>
+                                    <Button variant="contained" color='primary' onClick={handleRegister}>Login</Button>
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>

@@ -50,7 +50,7 @@ export default function LandingPage() {
                         <Grid item xs={6}>
                             <LandingCard title='Individual' image={<LottieIndividual/>} handleClick={() => setIndividual(true)} 
                             content="Sign in here if you're checking in to a storefront. Let's keep you safe." />
-                        </Grid>
+                        </Grid> 
                     </Grid>
                 </Container>
             </React.Fragment>

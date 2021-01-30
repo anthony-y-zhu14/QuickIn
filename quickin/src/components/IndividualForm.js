@@ -42,21 +42,46 @@ export default function IndividualForm(action) {
 
     const handleLogin = () => {
         if (login_email && login_password) {
-            alert("login");
+            attemptLogin()
         }
         else alert("please fill all required field")
     }
 
+    async function attemptLogin() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: login_email, password: login_password })
+        };
+        const response = await fetch('/visitor/login', requestOptions);
+        const data = await response.json();
+        if (data.authentication === true) {
+            action.auth(); 
+        }               
+    }     
 
 
     const handleRegister = () => {
         if (register_email && register_firstName && register_lastName && register_password && register_phoneNumber && register_re_password && (register_re_password === register_password)) {
-            alert("register");
+            attemptRegister();
         }
         else if (register_re_password !== register_password) {
             alert("same password pls") 
         }
         else alert("please fill all required field") 
+    }
+
+    async function attemptRegister() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: register_email, password: register_password, firstName: register_firstName, lastName: register_lastName, phoneNumber: register_phoneNumber })
+        };
+        const response = await fetch('/visitor/register', requestOptions);
+        const data = await response.json();
+        if (data.authentication === true) {
+            action.auth(); 
+        }               
     }
     
     return (

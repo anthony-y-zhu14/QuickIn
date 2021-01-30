@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Fab, Typography, Container, Grid, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BusinessForm from '../components/BusinessForm.js'
@@ -23,20 +23,32 @@ const useStyles = makeStyles({
 
 export default function BusinessPage(action) {
     const classes = useStyles();
-    const [isTest, setIsTest] = useState(false);
+    const [authenticated, setAuth] = React.useState(false);
 
-    if(!isTest) {
+    React.useEffect = (()=>{
+        if (!authenticated) {
+            checkAuth();
+        }
+    })
+
+    const checkAuth = async () => {
+        const response = await fetch('/visitor/checkSession');
+        const data = await response.json();
+        if (data) {
+            setAuth(true); 
+        }  
+    }
+
+    if(!authenticated) {
         return (
             <React.Fragment>
-                <Button onClick={() => setIsTest(true)}>Test Page</Button>
                 <BusinessForm goBack={action.goBack}/>
             </React.Fragment>
         )
     }
-    if(isTest) {
+    if(authenticated) {
         return (
             <React.Fragment>
-                <Button onClick={() => setIsTest(false)}>Go Back</Button>
                 <Dashboard/>
             </React.Fragment>
         )

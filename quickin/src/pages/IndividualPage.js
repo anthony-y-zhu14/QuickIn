@@ -27,6 +27,20 @@ export default function IndividualPage(action) {
     const [scanResult, setResult] = React.useState(undefined);
     const classes = useStyles();
 
+    React.useEffect = (()=>{
+        if (!authenicated) {
+            checkAuth();
+        }
+    })
+
+    const checkAuth = async () => {
+        const response = await fetch('/visitor/checkSession');
+        const data = await response.json();
+        if (data) {
+            setAuth(true); 
+        }  
+    }
+
     const handleScan = (data) => {
         if (data) {
             setResult(data);
@@ -37,16 +51,15 @@ export default function IndividualPage(action) {
         console.log(err);
     }
 
-    const logout = () => {
-        setAuth(false);
-        action.goBack()
+    const logout = async () => {
+        fetch('/visitor/logout');
     }
     
     if (!authenicated) {
         return (
             <React.Fragment>
                 <Button onClick={()=>setAuth(true)}>Test page</Button>
-                <IndividualForm goBack={action.goBack} />
+                <IndividualForm goBack={action.goBack} auth={checkAuth}/>
             </React.Fragment>
         );
     }  
