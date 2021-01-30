@@ -69,7 +69,7 @@ export default function LandingPage() {
     if (isBusiness) {
         return (
             <Container maxWidth={'md'}>
-                <BusinessPage />
+                <BusinessPage goBack={reset}/>
             </Container> 
         )
     }

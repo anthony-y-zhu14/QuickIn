@@ -1,7 +1,8 @@
 import React from 'react';
-import {Fab, Typography, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField, Fade } from '@material-ui/core';
+import {Fab, Typography, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IndividualForm from '../components/IndividualForm.js';
 
 const useStyles = makeStyles({
     root: {
@@ -10,81 +11,59 @@ const useStyles = makeStyles({
     main: {
         margin: '100px auto',
     },
-    form: {
+    content: {
         textAlign: 'center',
-        padding: '1em'
+        padding: '1em',
+        color: 'black'
+    },
+    cameraWindow: {
+        margin: '5% auto',
+        border: "5px solid black"
     }
   });
 
 export default function IndividualPage(action) {
-    const [login, setLogin] = React.useState(true);
-    const [register, setRegister] = React.useState(false);
+    const [authenicated, setAuth] = React.useState(false);
     const classes = useStyles();
 
-    const renderLogin = () => {
-        setLogin(true);
-        setRegister(false);
+    const logout = () => {
+        setAuth(false);
+        action.goBack()
     }
-
-    const renderRegister = () => {
-        setRegister(true);
-        setLogin(false);
-    }
-
-    const handleLogin = () => {
-        alert("login");
-    }
-
-    const handleRegister = () => {
-        alert("register");
-    }
-  
-    return (
-        <Zoom in={true}>
-            <Container axWidth={'md'} className={classes.main}>                    
-                <ButtonGroup variant="contained" color="primary">
-                    <Button onClick={renderLogin}>I have an account</Button>
-                    <Button onClick={renderRegister}>I want to Register</Button>
-                </ButtonGroup> 
-                {login && (
-                    <Paper className={classes.form} elevation={3}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField variant='outlined' label='Email'></TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField variant='outlined' label='Password' type='password'></TextField>
-                            </Grid>                        
-                            <Grid item xs={12}>
-                                <Fab variant='extendented' color='primary' onClick={handleLogin}>Submit</Fab>
-                            </Grid>                           
-                        </Grid>
-                    </Paper> 
-                )}
-                {register && (
-                        <Paper className={classes.form} elevation={3}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <TextField variant='outlined' label='Email'></TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField variant='outlined' label='Password'></TextField>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField variant='outlined' label='Re-enter Password'></TextField>
-                            </Grid>    
-                            <Grid item xs={12}>
-                                <Fab variant='extended' color='primary' onClick={handleRegister}>Submit</Fab>
-                            </Grid>                           
-                        </Grid>
-                    </Paper>    
-                )}   
-                <Fab variant='extended' color='primary' onClick={action.goBack}><ArrowBackIcon/></Fab>                                   
-            </Container> 
-        </Zoom>
-    );
     
+    if (!authenicated) {
+        return (
+            <React.Fragment>
+                <Button onClick={()=>setAuth(true)}>Test page</Button>
+                <IndividualForm goBack={action.goBack} />
+            </React.Fragment>
+        );
+    }  
 
-
-      
+    if (authenicated) {
+        return (
+            <React.Fragment>
+                 {/* remove it later */}
+                <Button onClick={()=>setAuth(false)}>Test form</Button>
+                <Zoom in={true}>
+                    <Container className={classes.main}>
+                        <Paper elevation={3} className={classes.content}>
+                            <Typography variant='h5'>Welcome 'insert Username'</Typography>
+                            <Typography variant='p'>Today is 'insert date'</Typography>   
+                            <Grid container spacing={2}>  
+                                <Grid item xs={12}>
+                                    <Container className={classes.cameraWindow}>
+                                        <h1>This is where the camera window will be</h1>
+                                    </Container>
+                                </Grid>   
+                                <Grid item xs={12}>
+                                    <Button variant='contained' color='primary' onClick={logout}>Log Out</Button>
+                                </Grid>                
+                            </Grid>
+                        </Paper>              
+                    </Container>
+                </Zoom>
+            </React.Fragment>
+        );
+    }          
   }
