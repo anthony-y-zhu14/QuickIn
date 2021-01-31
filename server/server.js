@@ -18,7 +18,31 @@ mongoose.connect(uri, {
   console.log('MongoDB Connected…')
   const db = mongoose.connection
 
-  app.use(express.static(path.join(__dirname, '../')));
+//   app.use(express.static(path.join(__dirname, '../')));
+
+const publicPath = path.join(__dirname, '../quickin/build');
+app.use(express.static(publicPath));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  });
+// app.get('/dashboard', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
+// app.get('/account', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
+// app.get('/trading', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
+// app.get('/market', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
+// app.get('/market/*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
+// app.get('/register', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
 
     app.use(session({
         name: 'Plumbus',
@@ -356,26 +380,4 @@ app.listen(process.env.PORT || 5000);
 .catch(err => console.log(err))
 
 
-// const publicPath = path.join(__dirname, '../quickin/build');
-// app.use(express.static(publicPath));
-// app.get('/login', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/dashboard', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/account', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/trading', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/market', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/market/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/register', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
+
