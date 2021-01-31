@@ -28,6 +28,6 @@ Their contact data is then automatically added to our database where the busines
 * Database: MongoDB, Mongoose
 * Libraries: @material-ui, mongoose, react-qr-reader, qrcode.react
 
-##Contributors:
-Anthony Zhu - https://www.linkedin.com/in/anthony-y-zhu/
-Joseph Malovic - https://www.linkedin.com/in/josephmalovic/
+## Contributors:
+- Anthony Zhu - https://www.linkedin.com/in/anthony-y-zhu/
+- Joseph Malovic - https://www.linkedin.com/in/josephmalovic/
