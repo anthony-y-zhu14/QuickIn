@@ -1,5 +1,5 @@
-import React from 'react';
-import {Typography, Container, Grid, Zoom, Button, Paper } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import {Typography, Container, Grid, Zoom, Button, Paper, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import IndividualForm from '../components/IndividualForm.js';
 import QrReader from 'react-qr-reader'
@@ -24,14 +24,31 @@ const useStyles = makeStyles({
 
 export default function IndividualPage(action) {
     const [authenicated, setAuth] = React.useState(false);
+    const [visitor, setVisitor] = React.useState(undefined);
     const [scanResult, setResult] = React.useState(undefined);
     const classes = useStyles();
-
-    React.useEffect = (()=>{
+      
+    useEffect(() => {
         if (!authenicated) {
             checkAuth();
         }
+        if (!visitor) {
+            fetchVisitorData().then((res)=>setVisitor(res));
+        }
     })
+
+    const checkIn = async() => {
+
+    }
+
+    const fetchVisitorData = async() => {
+        if (authenicated) {
+            const response = await fetch('/visitor');
+            const data = response.json();
+            return data;
+        }
+        
+    }
 
     const checkAuth = async () => {
         const response = await fetch('/visitor/checkSession');
@@ -53,31 +70,36 @@ export default function IndividualPage(action) {
 
     const logout = async () => {
         fetch('/visitor/logout');
+        setAuth(false);
     }
     
     if (!authenicated) {
         return (
             <React.Fragment>
-                <Button onClick={()=>setAuth(true)}>Test page</Button>
                 <IndividualForm goBack={action.goBack} auth={checkAuth}/>
             </React.Fragment>
         );
     }  
 
-    if (authenicated) {
+    if (!visitor) {
         return (
             <React.Fragment>
-                 {/* remove it later */}
-                <Button onClick={()=>setAuth(false)}>Test form</Button>
+                <LinearProgress/>
+            </React.Fragment>
+        );
+    } 
+
+    if (authenicated && visitor) {
+        return (
+            <React.Fragment>
                 <Zoom in={true}>
                     <Container className={classes.main}>
                         <Paper elevation={3} className={classes.content}>
-                            <Typography variant='h5'>Welcome 'insert Username'</Typography>
-                            <Typography variant='p'>Today is 'insert date'</Typography>   
+                            <Typography variant='h5'>Welcome {visitor.firstName} {visitor.lastName}</Typography>
                             <Grid container spacing={2}>  
                                 <Grid item xs={12}>
                                     <Container className={classes.cameraWindow}>
-                                        <h1>This is where the camera window will be</h1>
+                                        <h1>Point the camera to the QR code</h1>
                                         <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>
                                         <p>{scanResult}</p>
                                     </Container>

@@ -25,7 +25,7 @@ export default function BusinessPage(action) {
     const classes = useStyles();
     const [authenticated, setAuth] = React.useState(false);
 
-    React.useEffect = (()=>{
+    useEffect(() => {
         if (!authenticated) {
             checkAuth();
         }

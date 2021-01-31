@@ -2,7 +2,249 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const session = require('express-session');
+const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 const MemoryStore = require('memorystore')(session)
+const Business = require('./data_models/Business.js');
+const Visitor = require('./data_models/Visitor.js');
+const Business_Data = require('./data_models/Business_Data.js');
+
+const uri = 'mongodb+srv://joeMal:JDMdraZ3n@cluster0.pbfzk.mongodb.net/quickin?retryWrites=true&w=majority';
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('MongoDB Connected…')
+  const db = mongoose.connection
+
+  app.use(express.static(path.join(__dirname, '../')));
+
+    app.use(session({
+        name: 'Plumbus',
+        secret: 'fleeb_juice',
+        store: new MemoryStore({
+            checkPeriod: 86400000 // prune expired entries every 24h
+        }),
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true, //true by default
+            maxAge: 3600000, //milliseconds (1hr)
+            sameSite: true //strict
+        }
+    }));
+
+
+
+    /**********************************************
+        Account authentication Get and Post Requests:
+        - handles a visitors:
+            - authentication to the server
+            - logging in / out
+            - creating session & cookie
+            - destroying cookie on logout
+    **********************************************/
+    app.get("/visitor", function(req, res){
+        let data = undefined;
+        if (req.session.user) {
+            Visitor.findOne({"email": req.session.user.toLowerCase()}, function(err, found){
+                if(err){
+                    throw err;
+                }
+                if(found){
+                    data = found;
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/JSON");
+                    res.write(JSON.stringify(data));
+                }
+                else{
+                    res.statusCode = 401;
+                    res.setHeader("Content-Type", "application/JSON");
+                    res.write(data);
+                }
+                res.end();
+            });
+        }
+    });
+
+    app.get("/visitor/checkSession", function(req, res){
+        let data = '';
+        if (req.session.user){
+            data = req.sessionID;  
+        }
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/JSON");
+        res.write(JSON.stringify(data));
+        res.end();
+    });
+
+    app.get("/visitor/logout", function(req, res){
+        console.log(`${req.session.user} Logged Out, Cookie destroyed`);
+        req.session.destroy();
+        res.end();
+    });
+
+    app.post('/visitor/login', (req, res) => {
+        let data = "";
+        req.on('data', (chunk) => {
+            data = JSON.parse(chunk);
+        });
+        req.on('end', () => {
+            Visitor.findOne({"email": data.email.toLowerCase()}, function(err, found){
+                if(err){
+                    throw err;
+                }
+                if(found && found.password === data.password){
+                    req.session.user = data.email;
+                    req.session.save();
+                    const login_data = {
+                        authentication: true,
+                    }
+                    res.write(JSON.stringify(login_data));
+                }
+                else{
+                    console.log("wrong password");
+                }
+                res.end();
+            })
+        });        
+    });
+
+    app.post('/visitor/register', (req, res) => {
+        let data = "";
+        req.on('data', (chunk) => {
+            data = JSON.parse(chunk);
+        });
+
+        req.on('end', () => {         
+            Visitor.findOne({"email": data.email.toLowerCase()}, function(err, found){
+                if(err){
+                    throw err;
+                }
+                if(found){
+                    console.log("user already exists");
+                }
+                else{
+                    const newVisitor = new Visitor ({
+                        c_id: uuidv4(),
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        phoneNumber: data.phoneNumber,
+                        password: data.password,
+                        email: data.email
+                    });
+    
+                    newVisitor.save(function (error, document) {
+                        if(error) console.error(error)
+                        console.log(document)
+                    });            
+                    req.session.user = data.email;
+                    req.session.save();
+                    const login_data = {
+                        authentication: true,
+                    }
+                    res.write(JSON.stringify(login_data));
+                }
+                res.end();
+            });
+        });      
+    });
+
+    app.post('/business/login', (req, res) => {
+        let data = "";
+        req.on('data', (chunk) => {
+            data = JSON.parse(chunk);
+        });
+        req.on('end', () => {
+            console.log(data);
+            if(business[data.email] && business[data.email].password === data.password) {
+                req.session.user = business[data.email]['email'];
+                req.session.save();
+                const login_data = {
+                    authentication: true,
+                };
+                res.write(JSON.stringify(login_data));
+            }
+            else if(business[data.email] && business[data.email].password !== data.password) {
+            const login_data = {
+                authentication: 'passwordError',
+            };
+            res.write(JSON.stringify(login_data));
+            } else {
+                const login_data = {
+                    authentication: 'usernameError',
+                };
+                res.write(JSON.stringify(login_data));
+            }
+            res.end();
+        });        
+    });
+
+app.post('/business/register', (req, res) => {
+    let data = "";
+    req.on('data', (chunk) => {
+        data = JSON.parse(chunk);
+    });
+    
+    
+    req.on('end', () => {        
+
+        Business.findOne({"businessName": data.businessName.toLowerCase()}, function(err, found) {
+            if(err) {
+                throw err;
+            }
+            if(found) {
+                console.log('Business exists rip')
+            } else {
+                const newBusiness = new Business ({
+                    businessName: data.businessName,
+                    phoneNumber: data.phoneNumber,
+                    password: data.password,       
+                    email: data.email,
+                    addressOne: data.addressOne,
+                    addressTwo: data.addressTwo,
+                    city: data.city,
+                    postalCode: data.postalCode,
+                    province: data.province,
+                    country: 'Canada',
+                    businessId: uuidv4(),
+                    businessKey: data.businessName + businessId
+                });
+
+                newBusiness.save(function (error, document) {
+                    if(error) console.log(error)
+                    console.log(document)
+                });
+
+                req.session.user = business[data.email].email;
+                req.session.save();
+                const login_data = {
+                    authentication: true,
+                };
+                res.write(JSON.stringify(login_data));
+            }
+            res.end();
+        });
+    });      
+});
+
+
+
+
+
+/**********************************************
+ Server Information
+********************************************* */
+app.listen(process.env.PORT || 5000);
+
+    console.log(`Please ensure the react-app is running and navigate to ${process.env.PORT || 5000}`);
+
+    
+})
+.catch(err => console.log(err))
+
+
 // const publicPath = path.join(__dirname, '../quickin/build');
 // app.use(express.static(publicPath));
 // app.get('/login', (req, res) => {
@@ -26,201 +268,3 @@ const MemoryStore = require('memorystore')(session)
 // app.get('/register', (req, res) => {
 //     res.sendFile(path.join(__dirname, '../build', 'index.html'));
 //   });
-app.use(express.static(path.join(__dirname, '../')));
-
-app.use(session({
-    name: 'Plumbus',
-    secret: 'fleeb_juice',
-    store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-      }),
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true, //true by default
-        maxAge: 3600000, //milliseconds (1hr)
-        sameSite: true //strict
-    }
-}));
-
-const visitors = {
-    "Rick123@gmail.com": {
-        firstName: "Rick",
-        lastName: "Sanchez",
-        phoneNumber: "6132252320",
-        password: "123456",       
-        email: "Rick123@gmail.com"
-    }
-}
-
-const business = {
-    "Shoney's" : {
-        name: "Shoney's",
-        address: "home",
-        email: "Shoneys@gmail.com",
-        phoneNumber: "6132252320",
-    }
-}
-
-/**********************************************
-    Account authentication Get and Post Requests:
-     - handles a visitors:
-        - authentication to the server
-        - logging in / out
-        - creating session & cookie
-        - destroying cookie on logout
-**********************************************/
-app.get("/visitor/checkSession", function(req, res){
-    let data = '';
-    if (req.session.user){
-        data = req.sessionID;  
-    }
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/JSON");
-    res.write(JSON.stringify(data));
-    res.end();
-});
-
-app.get("/visitor/logout", function(req, res){
-    console.log(`${req.session.user} Logged Out, Cookie destroyed`);
-    req.session.destroy();
-    res.end();
-});
-
-app.post('/visitor/login', (req, res) => {
-    let data = "";
-    req.on('data', (chunk) => {
-        data = JSON.parse(chunk);
-    });
-    req.on('end', () => {
-        console.log(data);
-        if(visitors[data.email] && visitors[data.email].password === data.password) {
-            req.session.user = visitors[data.email].email;
-            req.session.save();
-            const login_data = {
-                authentication: true,
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        else if(visitors[data.email] && visitors[data.email].password !== data.password) {
-        const login_data = {
-            authentication: 'passwordError',
-        };
-        res.write(JSON.stringify(login_data));
-        } else {
-            const login_data = {
-                authentication: 'usernameError',
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        res.end();
-    });        
-});
-
-app.post('/visitor/register', (req, res) => {
-    let data = "";
-    req.on('data', (chunk) => {
-        data = JSON.parse(chunk);
-    });
-    req.on('end', () => {        
-        if(!visitors[data.email]) {
-            const newVisitor = {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                phoneNumber: data.phoneNumber,
-                password: data.password,       
-                email: data.email
-            }
-            visitors[data.email] = newVisitor;
-            req.session.user = visitors[data.email].email;
-            req.session.save();
-            const login_data = {
-                authentication: true,
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        else if(visitors[email]) {
-            const login_data = {
-                authentication: 'usernameError'
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        console.log(visitors);
-        res.end();
-    });      
-});
-
-app.post('/business/login', (req, res) => {
-    let data = "";
-    req.on('data', (chunk) => {
-        data = JSON.parse(chunk);
-    });
-    req.on('end', () => {
-        console.log(data);
-        if(business[data.email] && business[data.email].password === data.password) {
-            req.session.user = business[data.email]['email'];
-            req.session.save();
-            const login_data = {
-                authentication: true,
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        else if(business[data.email] && business[data.email].password !== data.password) {
-        const login_data = {
-            authentication: 'passwordError',
-        };
-        res.write(JSON.stringify(login_data));
-        } else {
-            const login_data = {
-                authentication: 'usernameError',
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        res.end();
-    });        
-});
-
-app.post('/business/register', (req, res) => {
-    let data = "";
-    req.on('data', (chunk) => {
-        data = JSON.parse(chunk);
-    });
-    req.on('end', () => {        
-        if(!business[data.email]) {
-            const newBusiness = {
-                businessName: data.businessName,
-                phoneNumber: data.phoneNumber,
-                password: data.password,       
-                email: data.email,
-                addressOne: data.addressOne,
-                addressTwo: data.addressTwo,
-                city: data.city,
-                postalCode: data.postalCode,
-                province: data.province,
-                country: 'Canada'
-            }
-            business[data.email] = newBusiness;
-            req.session.user = business[data.email].email;
-            req.session.save();
-            const login_data = {
-                authentication: true,
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        else if(business[email]) {
-            const login_data = {
-                authentication: 'usernameError'
-            };
-            res.write(JSON.stringify(login_data));
-        }
-        console.log(business);
-        res.end();
-    });      
-});
-
-/**********************************************
- Server Information
-********************************************* */
-app.listen(process.env.PORT || 5000);
-
-    console.log(`Please ensure the react-app is running and navigate to ${process.env.PORT || 5000}`);

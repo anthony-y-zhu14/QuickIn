@@ -1,5 +1,5 @@
-import React from 'react';
-import {Fab, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField } from '@material-ui/core';
+import React, { useEffect }  from 'react';
+import {Fab, Container, Grid, Zoom, ButtonGroup, Button, Paper, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -13,6 +13,9 @@ const useStyles = makeStyles({
     form: {
         textAlign: 'center',
         padding: '1em',
+    }, 
+    buttonGroup: {
+        margine: '0% auto'
     }
   });
 
@@ -60,7 +63,6 @@ export default function IndividualForm(action) {
         }               
     }     
 
-
     const handleRegister = () => {
         if (register_email && register_firstName && register_lastName && register_password && register_phoneNumber && register_re_password && (register_re_password === register_password)) {
             attemptRegister();
@@ -87,12 +89,13 @@ export default function IndividualForm(action) {
     return (
         <Zoom in={true}>
             <Container axWidth={'md'} className={classes.main}>                    
-                <ButtonGroup variant="contained" color="primary">
-                    <Button onClick={renderLogin}>I have an account</Button>
-                    <Button onClick={renderRegister}>I want to Register</Button>
+                <ButtonGroup className={classes.buttonGroup} variant="contained" color="primary">
+                    <Button onClick={renderLogin} color={login ? "primary":"secondary"}>I have an account</Button>
+                    <Button onClick={renderRegister} color={register ? "primary":"secondary"}>I want to Register</Button>
                 </ButtonGroup> 
                 {login && (
                     <Paper className={classes.form} elevation={3}>
+                        <Typography variant={'h3'} style={{margin: '2%'}}>Let's get you ready for check in</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField variant='outlined' label='Email' value={login_email} onChange={(e)=>setlogin_email(e.target.value)}></TextField>
@@ -101,43 +104,46 @@ export default function IndividualForm(action) {
                                 <TextField variant='outlined' label='Password' type='password' value={login_password} onChange={(e)=>setlogin_password(e.target.value)}></TextField>
                             </Grid>                        
                             <Grid item xs={12}>
-                                <Button variant='contained' color='primary' onClick={handleLogin}>Submit</Button>
+                                <Button variant='contained' color='primary' disabled={(!login_email || !login_password)} onClick={handleLogin}>Submit</Button>
                             </Grid>                           
                         </Grid>
                     </Paper> 
                 )}
                 {register && (
                         <Paper className={classes.form} elevation={3}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='First Name' value={register_firstName} onChange={(e)=>setregister_firstName(e.target.value)}></TextField>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Last Name' value={register_lastName} onChange={(e)=>setregister_lastName(e.target.value)}></TextField>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Phone Number' value={register_phoneNumber} onChange={(e)=>setregister_phoneNumber(e.target.value)}></TextField>
-                            </Grid>
-                            <Grid item xs={6}></Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Email' value={register_email} onChange={(e)=>setregister_email(e.target.value)}></TextField>
-                            </Grid>
-                            <Grid item xs={6}></Grid>
+                            <Typography variant={'h3'} style={{margin: '2%'}}>Let's setup you up for future check in</Typography>
+                            <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                    <TextField variant='outlined' label='First Name' value={register_firstName} onChange={(e)=>setregister_firstName(e.target.value)}></TextField>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField variant='outlined' label='Last Name' value={register_lastName} onChange={(e)=>setregister_lastName(e.target.value)}></TextField>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField variant='outlined' label='Phone Number' value={register_phoneNumber} onChange={(e)=>setregister_phoneNumber(e.target.value)}></TextField>
+                                </Grid>
+                                <Grid item xs={6}></Grid>
+                                <Grid item xs={6}>
+                                    <TextField variant='outlined' label='Email' value={register_email} onChange={(e)=>setregister_email(e.target.value)}></TextField>
+                                </Grid>
+                                <Grid item xs={6}></Grid>
 
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Password' type='password' value={register_password} onChange={(e)=>setregister_password(e.target.value)}></TextField>
+                                <Grid item xs={6}>
+                                    <TextField variant='outlined' label='Password' type='password' value={register_password} onChange={(e)=>setregister_password(e.target.value)}></TextField>
+                                </Grid>
+                                {register_password && (
+                                    <Grid item xs={6}>
+                                        <TextField variant='outlined' label='Verify Password' type='password' value={register_re_password} onChange={(e)=>setregister_re_password(e.target.value)}></TextField>
+                                    </Grid> 
+                                )}                                                         
+                                <Grid item xs={12}>
+                                    <Button variant='contained' color='primary' onClick={handleRegister}>Submit</Button>
+                                </Grid>                           
                             </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant='outlined' label='Re-enter Password' type='password' value={register_re_password} onChange={(e)=>setregister_re_password(e.target.value)}></TextField>
-                            </Grid>                          
-                            <Grid item xs={12}>
-                                <Button variant='contained' color='primary' onClick={handleRegister}>Submit</Button>
-                            </Grid>                           
-                        </Grid>
                     </Paper>    
                 )}   
                 <br/>
-                <Fab variant='extended' color='primary' onClick={action.goBack}><ArrowBackIcon/>Back</Fab>                                   
+                <Fab variant='extended' color='primary' onClick={action.goBack}><ArrowBackIcon/>Home</Fab>                                   
             </Container> 
         </Zoom>
     ); 

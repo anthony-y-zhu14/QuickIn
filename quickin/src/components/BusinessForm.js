@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {Fab, Typography, Container, Grid, Button, Paper, Zoom, TextField } from '@material-ui/core';
-import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
@@ -25,8 +24,6 @@ export default function BusinessForm(action) {
     const [isRegistered, setRegistered] = useState(false);
     const [isNext, setNext] = useState(false);
 
-    const [login, setLogin] = React.useState(true);
-    const [register, setRegister] = React.useState(false);
     const [login_email, setlogin_email] = React.useState(undefined);
     const [login_password, setlogin_password] = React.useState(undefined);
     const [register_email, setregister_email] = React.useState(undefined);
@@ -48,6 +45,13 @@ export default function BusinessForm(action) {
         else if (register_re_password !== register_password) {
             alert("same password pls") 
         } else alert('Please fill out all form fields to continue.');
+    }
+
+    const handleLogin = () => {
+        if (login_email && login_password) {
+            attemptLogin()
+        }
+        else alert('Please fill out all form fields to continue.');
     }
 
     const handleNext = () => {
@@ -78,9 +82,22 @@ export default function BusinessForm(action) {
         const response = await fetch('/business/register', requestOptions);
         const data = await response.json();
         if (data.authentication === true) {
-            action.auth('true'); 
+            action.auth(); 
         }               
     }
+
+    async function attemptLogin() {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: login_email, password: login_password })
+        };
+        const response = await fetch('/business/login', requestOptions);
+        const data = await response.json();
+        if (data.authentication === true) {
+            action.auth(); 
+        }               
+    }     
 
 
     if(!isRegistered && !isNext) {
@@ -116,7 +133,7 @@ export default function BusinessForm(action) {
                         </Grid>
                     </Paper> 
                     <br />
-                    <Fab variant='extended' onClick={action.goBack} color='primary'><ArrowBackIcon/>Back</Fab>                                   
+                    <Fab variant='extended' onClick={action.goBack} color='primary'><ArrowBackIcon/>Home</Fab>                                   
                 </Container>
 
             </Zoom>
@@ -133,17 +150,17 @@ export default function BusinessForm(action) {
                     </Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' label='Email'></TextField>
+                                <TextField variant='outlined' onChange={(e)=>setlogin_email(e.target.value)} label='Email'></TextField>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password' label='Password'></TextField>
+                                <TextField variant='outlined' type='password' onChange={(e)=>setlogin_password(e.target.value)} label='Password'></TextField>
                             </Grid>  
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
                                 <Grid item>
-                                    <Button onClick={() => setNext(false), () => setRegistered(false)} variant="contained" color='primary'>Back</Button>
+                                    <Button onClick={() => setNext(false), () => setRegistered(false)} variant="contained" color='primary'>Home</Button>
                                 </Grid>               
                                 <Grid item>
-                                    <Button variant="contained" color='primary'>Login</Button>
+                                    <Button variant="contained" color='primary' onClick={handleLogin}>Login</Button>
                                 </Grid>   
                             </Grid>                          
                         </Grid>
