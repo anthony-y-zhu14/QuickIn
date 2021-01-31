@@ -3,6 +3,7 @@
 <h2>Made by Anthony Zhu & Joseph Malovic</h2>
 
 ## Live Link: https://quickin.herokuapp.com
+## Demo Video: https://www.youtube.com/watch?v=uYFf-w2KdII&t=2s
 
 A simple check-in app that simplfies the gathering of contact tracing information. 
 Built in 24hrs during the Carleton University 2021 Hackathon. 
@@ -26,3 +27,7 @@ Their contact data is then automatically added to our database where the busines
 * Backend: NodeJs Server
 * Database: MongoDB, Mongoose
 * Libraries: @material-ui, mongoose, react-qr-reader, qrcode.react
+
+##Contributors:
+Anthony Zhu - https://www.linkedin.com/in/anthony-y-zhu/
+Joseph Malovic - https://www.linkedin.com/in/josephmalovic/
