@@ -1,6 +1,9 @@
-# cuhacking_2021: QuickIn 
-### Made by Anthony Zhu & Joseph Malovic
+# cuhacking_2021: Quick-In 
+<hr />
+<h2>Made by Anthony Zhu & Joseph Malovic</h2>
 
-## A simple check-in app that simplfies the gathering of 
-## contact tracing information. Built in 24hrs during the
-## Carleton University Hacking 2021 Hackathon. 
+## Live Link: https://quickin.herokuapp.com
+
+A simple check-in app that simplfies the gathering of contact tracing information. 
+Built in 24hrs during the Carleton University 2021 Hackathon. 
+
