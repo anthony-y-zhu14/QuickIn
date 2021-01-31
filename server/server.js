@@ -25,24 +25,7 @@ app.use(express.static(publicPath));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
-// app.get('/dashboard', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/account', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/trading', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/market', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/market/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
-// app.get('/register', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
+
 
     app.use(session({
         name: 'Plumbus',
@@ -128,7 +111,10 @@ app.get('/', (req, res) => {
                     res.write(JSON.stringify(login_data));
                 }
                 else{
-                    console.log("wrong password");
+                    const login_data = {
+                        authentication: false,
+                    }
+                    res.write(JSON.stringify(login_data));
                 }
                 res.end();
             })
@@ -210,6 +196,12 @@ app.get('/', (req, res) => {
         res.end();
     });
 
+    app.get("/business/logout", function(req, res){
+        console.log(`${req.session.business} Logged Out, Cookie destroyed`);
+        req.session.destroy();
+        res.end();
+    });
+
     app.post('/business/login', (req, res) => {
         let data = "";
         req.on('data', (chunk) => {
@@ -257,7 +249,7 @@ app.post('/business/register', (req, res) => {
                     businessName: data.businessName,
                     phoneNumber: data.phoneNumber,
                     password: data.password,       
-                    email: data.email,
+                    email: data.email.toLowerCase(),
                     addressOne: data.addressOne,
                     addressTwo: data.addressTwo,
                     city: data.city,

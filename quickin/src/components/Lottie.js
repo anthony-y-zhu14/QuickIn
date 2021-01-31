@@ -15,8 +15,8 @@ class UncontrolledLottie extends Component {
     return(
       <div>
         <Lottie options={defaultOptions}
-              height={250}
-              width={250}
+              height={'24em'}
+              width={'%100'}
         />
       </div>
     )

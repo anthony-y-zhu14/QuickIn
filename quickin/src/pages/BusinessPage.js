@@ -66,6 +66,11 @@ export default function BusinessPage(action) {
         }  
     }
 
+    const logout = async () => {
+        fetch('/business/logout');
+        setAuth(false);
+    }
+
     if(!authenticated) {
         return (
             <React.Fragment>
@@ -82,7 +87,7 @@ export default function BusinessPage(action) {
     if(authenticated && business && businessData) {
         return (
             <React.Fragment>
-                <Dashboard isAuthenticated={authenticated} busi={business} visitsData={businessData}/>
+                <Dashboard isAuthenticated={authenticated} busi={business} visitsData={businessData} logout={logout}/>
             </React.Fragment>
         )
     } 

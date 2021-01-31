@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import QRCard from '../components/QRCard.js';
 import DataCard from '../components/DataCard.js';
-import {Fab, Typography, Container, Grid, Button, Paper, TextField, Box, AppBar, Tabs, Tab, Card, CardActions, CardContent} from '@material-ui/core';
+import {Fab, Typography, Container, Grid, Button, Paper, TextField, Box, AppBar, Tabs, Tab} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 function TabPanel(props) {
@@ -121,7 +121,7 @@ export default function Dashboard(data) {
                                     <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                                     <Tab label="Generate QR Code" {...a11yProps(0)} />
                                     <Tab label="Check-In Data" {...a11yProps(1)} />
-                                    <Tab label="Settings" {...a11yProps(2)} />
+                                    <Tab label="Settings" {...a11yProps(2)} />    
                                     </Tabs>
                                 </AppBar>
                                 <TabPanel value={value} index={0}>
@@ -136,8 +136,12 @@ export default function Dashboard(data) {
                             </div>
                         </Grid>
                     </Grid>
+                    
                 </Container>
             </Paper>
+            <br />
+            <br />
+            <Fab variant='extended' color='primary' onClick={()=>data.logout()}>Logout</Fab>
         </React.Fragment>
     )
 }

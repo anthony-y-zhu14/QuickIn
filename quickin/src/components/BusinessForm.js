@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import {Fab, Typography, Container, Grid, Button, Paper, Zoom, TextField } from '@material-ui/core';
+import {Fab, Typography, Container, Grid, Button, ButtonGroup, Paper, Zoom, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import LottieHands from '../components/Lottie3.js';
 
 const useStyles = makeStyles({
     root: {
@@ -102,24 +103,27 @@ export default function BusinessForm(action) {
 
     if(!isRegistered && !isNext) {
         return (
-            <Zoom in={true}>
+            
                 <Container maxWidth={'md'} className={classes.main}>
+                <Zoom in={true}>
                 <Paper className={classes.form} elevation={3}>
+                    <LottieHands />
                     <Typography variant={'h3'} style={{margin: '2%'}}>Let's get your business setup.</Typography>
-                    <Typography variant={'body1'} style={{margin: '2%'}}>Already have an account?   
-                     <span onClick={() => setRegistered(true)} style={{color: 'blue', textDecoration: 'underline', paddingLeft: 3}}>Login.</span>
-                    </Typography>
+                    <ButtonGroup variant='contained'>
+                    <Button color={isRegistered?'secondary':'primary'} onClick={() => setRegistered(false)}>Register</Button>
+                            <Button color={isRegistered?'primary':'secondary'} onClick={() => setRegistered(true)}>Login</Button>
+                    </ButtonGroup>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setregister_businessName(e.target.value)} label='Business Name' /></Grid>
-                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setregister_email(e.target.value)} label='Email' /></Grid>
-                            <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_phoneNumber(e.target.value)} label='Phone Number'/></Grid> 
+                            <Grid item xs={12} sm={6}><TextField style={{width: 200}} variant='outlined' onChange={(e)=>setregister_businessName(e.target.value)} label='Business Name' /></Grid>
+                            <Grid item xs={12} sm={6}><TextField style={{width: 200}} variant='outlined' onChange={(e)=>setregister_email(e.target.value)} label='Email' /></Grid>
+                            <Grid item xs={12} sm={6}><TextField  style={{width: 200}}variant='outlined' onChange={(e)=>setRegister_phoneNumber(e.target.value)} label='Phone Number'/></Grid> 
                             <Grid container spacing={2} style={{marginTop: 20}}>
-                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_addressOne(e.target.value)} label='Address Line 1' /></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_addressTwo(e.target.value)} label='Address Line 2' /></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_postalCode(e.target.value)} label='Postal Code' /></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_city(e.target.value)} label='City' /></Grid>
-                                <Grid item xs={6}><TextField variant='outlined' onChange={(e)=>setRegister_province(e.target.value)} label='Province / Territory' /></Grid>
-                                <Grid item xs={6}><TextField disabled={'true'} variant='outlined' label='Canada' /></Grid>
+                                <Grid item xs={12} sm={6} style={{width: 200}}><TextField variant='outlined' onChange={(e)=>setRegister_addressOne(e.target.value)} label='Address Line 1' /></Grid>
+                                <Grid item xs={12} sm={6} style={{width: 200}}><TextField variant='outlined' onChange={(e)=>setRegister_addressTwo(e.target.value)} label='Address Line 2' /></Grid>
+                                <Grid item xs={12} sm={6} style={{width: 200}}><TextField variant='outlined' onChange={(e)=>setRegister_postalCode(e.target.value)} label='Postal Code' /></Grid>
+                                <Grid item xs={12} sm={6} style={{width: 200}}><TextField variant='outlined' onChange={(e)=>setRegister_city(e.target.value)} label='City' /></Grid>
+                                <Grid item xs={12} sm={6} style={{width: 200}}><TextField variant='outlined' onChange={(e)=>setRegister_province(e.target.value)} label='Province / Territory' /></Grid>
+                                <Grid item xs={12}  sm={6} style={{width: 200}}><TextField disabled={'true'} variant='outlined' label='Canada' /></Grid>
                             </Grid>           
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
                          
@@ -131,41 +135,44 @@ export default function BusinessForm(action) {
                                 <Typography variant={'body2'}>Step 1/2</Typography>
                             </Grid>                   
                         </Grid>
-                    </Paper> 
+                    </Paper>
+                    </Zoom> 
                     <br />
                     <Fab variant='extended' onClick={action.goBack} color='primary'><ArrowBackIcon/>Home</Fab>                                   
                 </Container>
 
-            </Zoom>
+            
     
         )
     } if(isRegistered) {
         return (
             <React.Fragment>
+                <Zoom in={true}>
                 <Container maxWidth={'md'} className={classes.main}>
-                <Paper className={classes.form} elevation={3}>
+                <Paper className={classes.form} elevation={3}>                    
+                <LottieHands />
                     <Typography variant={'h3'} style={{margin: '2%'}}>Let's get you logged in!</Typography>
-                    <Typography variant={'body1'} style={{margin: '2%'}}>Don't have an account?   
-                     <span onClick={() => setRegistered(false)} style={{color: 'blue', textDecoration: 'underline', paddingLeft: 3}}>Register.</span>
-                    </Typography>
+                    <ButtonGroup variant='contained'>
+                            <Button color={isRegistered?'secondary':'primary'} onClick={() => setRegistered(false)}>Register</Button>
+                            <Button color={isRegistered?'primary':'secondary'} onClick={() => setRegistered(true)}>Login</Button>
+                    </ButtonGroup>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' onChange={(e)=>setlogin_email(e.target.value)} label='Email'></TextField>
+                                <TextField variant='outlined' style={{width: 200}} onChange={(e)=>setlogin_email(e.target.value)} label='Email'></TextField>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password' onChange={(e)=>setlogin_password(e.target.value)} label='Password'></TextField>
+                                <TextField variant='outlined' style={{width: 200}} type='password' onChange={(e)=>setlogin_password(e.target.value)} label='Password'></TextField>
                             </Grid>  
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
+                                             
                                 <Grid item>
-                                    <Button onClick={() => setNext(false), () => setRegistered(false)} variant="contained" color='primary'>Home</Button>
-                                </Grid>               
-                                <Grid item>
-                                    <Button variant="contained" color='primary' onClick={handleLogin}>Login</Button>
+                                    <Button variant="contained" color='primary' onClick={handleLogin}>Submit</Button>
                                 </Grid>   
                             </Grid>                          
                         </Grid>
                     </Paper> 
                 </Container>
+                </Zoom>
             </React.Fragment>
         )
     }
@@ -173,22 +180,23 @@ export default function BusinessForm(action) {
     if(isNext && !isRegistered) {
         return (
             <React.Fragment>
+                <Zoom in={true}>
                 <Container maxWidth={'md'} className={classes.main}>
                 <Paper className={classes.form} elevation={3}>
                     <Typography variant={'h3'} style={{margin: '2%'}}>Let's get your business setup.</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password' onChange={(e)=>setregister_password(e.target.value)} label='Password'></TextField>
+                                <TextField variant='outlined' style={{width: 200}} type='password' onChange={(e)=>setregister_password(e.target.value)} label='Password'></TextField>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant='outlined' type='password'  onChange={(e)=>setregister_re_password(e.target.value)} label='Confirm Password'></TextField>
+                                <TextField variant='outlined' style={{width: 200}} type='password'  onChange={(e)=>setregister_re_password(e.target.value)} label='Confirm Password'></TextField>
                             </Grid>
                             <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}>
                                 <Grid item>
                                     <Button onClick={() => setNext(false)} variant="contained" color='primary'>Back</Button>
                                 </Grid>               
                                 <Grid item>
-                                    <Button variant="contained" color='primary' onClick={handleRegister}>Login</Button>
+                                    <Button variant="contained" color='primary' onClick={handleRegister}>Submit</Button>
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
@@ -197,6 +205,7 @@ export default function BusinessForm(action) {
                         </Grid>
                     </Paper> 
                 </Container>
+                </Zoom>
             </React.Fragment>
         )
     }

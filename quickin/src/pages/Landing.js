@@ -36,18 +36,19 @@ export default function LandingPage() {
         return (
             <React.Fragment>
                 <Container maxWidth={'md'} className={classes.main}>
-                    <Typography variant={'h2'} style={{textAlign: 'center', padding: 40}}>Welcome to Quick-in.</Typography>
+                    <Typography variant={'h2'} style={{textAlign: 'center'}}>Welcome to Quick-in.</Typography>
                     <Container>
-                        <Typography variant={'body1'} style={{margin: 20}}>A simple check-in process that provides businesses with a
+                        <Typography variant={'body1'} style={{textAlign: 'center'}}>A simple check-in process that provides businesses with a
                         fast, secure, and safe experience for collecting contact information from customers.
                         </Typography>
                     </Container>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                    <br />
+                    <Grid container justify='center'  alignItems={'center'} spacing={2}>
+                        <Grid item xs={12} sm={5}>
                             <LandingCard title='Business' image={<LottieStoreFront/>} handleClick={() => setBusiness(true)} 
                             content='Automate contract tracing information gathering in your storefront!' />
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} sm={5}>
                             <LandingCard title='Individual' image={<LottieIndividual/>} handleClick={() => setIndividual(true)} 
                             content="Sign in here if you're checking in to a storefront. Let's keep you safe." />
                         </Grid> 

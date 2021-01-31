@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import Lottie from 'react-lottie';
-import animationData from '../assets/Individual.json'
+import animationData from '../assets/Hands.json'
 
 class UncontrolledLottie extends Component {
   render(){
     const defaultOptions = {
-      loop: false,
+      loop: true,
       autoplay: true,
       animationData: animationData,
       rendererSettings: {
@@ -15,8 +15,8 @@ class UncontrolledLottie extends Component {
     return(
       <div>
         <Lottie options={defaultOptions}
-              height={'24em'}
-              width={'%100'}
+              height={150}
+              width={150}
         />
       </div>
     )

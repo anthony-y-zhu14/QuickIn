@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Lottie from 'react-lottie';
-import animationData from '../assets/Individual.json'
+import animationData from '../assets/Check.json'
 
 class UncontrolledLottie extends Component {
   render(){
@@ -15,8 +15,8 @@ class UncontrolledLottie extends Component {
     return(
       <div>
         <Lottie options={defaultOptions}
-              height={'24em'}
-              width={'%100'}
+              height={150}
+              width={150}
         />
       </div>
     )

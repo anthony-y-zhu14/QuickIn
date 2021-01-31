@@ -3,6 +3,8 @@ import {Typography, Container, Grid, Zoom, Button, Paper, ButtonGroup } from '@m
 import { makeStyles } from '@material-ui/core/styles';
 import IndividualForm from '../components/IndividualForm.js';
 import QrReader from 'react-qr-reader'
+import Check from '../components/Lottie4.js'
+
 
 const useStyles = makeStyles({
     root: {
@@ -52,7 +54,6 @@ export default function IndividualPage(action) {
         const data = await response.json();
         if (data.message === 'success') {
             setCheckedIn(true);
-            alert('Thanks for checking in 😊');
         } 
     }
 
@@ -115,12 +116,20 @@ export default function IndividualPage(action) {
                                             )}
                                             {scanResult &&(
                                                 <Container>
-                                                    <h1>{scanResult.name}</h1>
-                                                    <h1>Is this the correct resturant?</h1>
-                                                    <ButtonGroup variant='contained' color='primary'>
-                                                        <Button onClick={checkIn}>Yes, let me check in</Button>    
-                                                        <Button onClick={()=>setResult(undefined)}>No</Button> 
-                                                    </ButtonGroup>                                                           
+                                                    <Typography variant='h5'>to the: </Typography>
+                                                    <Typography variant='h3'>{scanResult.name}</Typography>
+                                                    <Typography variant='h5'>Is this the correct resturant?</Typography>
+
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs={12}>
+                                                            <Button variant='contained' color='primary' onClick={checkIn}>Yes, let me check in.</Button>   
+                                                        </Grid>
+                                                        <Grid item xs={12}>
+                                                            <Button variant='contained' color='primary'  onClick={()=>setResult(undefined)}>No, try again.</Button> 
+                                                        </Grid>
+                                                    </Grid>
+
+                                                               
                                                 </Container>
                                             )}
                                             {!cameraReady && (
@@ -130,7 +139,7 @@ export default function IndividualPage(action) {
                                             )}                                    
                                         </Grid>   
                                         <Grid item xs={12}>
-                                            <Button variant='contained' color='primary' onClick={logout}>Log Out</Button>
+                                            <Button variant='contained' color='secondary' onClick={logout}>Log Out</Button>
                                         </Grid>                
                                     </Grid>
                                 </React.Fragment>
@@ -138,7 +147,8 @@ export default function IndividualPage(action) {
 
                             {checkedIn && (
                                 <React.Fragment>
-                                    <h1>Thank you for checking In!</h1>
+                                    <Check />
+                                    <h1>Thanks for checking in 😊</h1>
                                     <Button variant='contained' color='primary' onClick={logout}>Exit</Button>
                                 </React.Fragment>
                             )}
