@@ -43,12 +43,12 @@ export default function LandingPage() {
                         </Typography>
                     </Container>
                     <br />
-                    <Grid container justify='center'  alignItems={'center'} spacing={2}>
-                        <Grid item xs={12} sm={5}>
+                    <Grid container justify='center' alignItems={'center'} spacing={2}>
+                        <Grid item xs={10} sm={5}>
                             <LandingCard title='Business' image={<LottieStoreFront/>} handleClick={() => setBusiness(true)} 
                             content='Automate contract tracing information gathering in your storefront!' />
                         </Grid>
-                        <Grid item xs={12} sm={5}>
+                        <Grid item xs={10} sm={5}>
                             <LandingCard title='Individual' image={<LottieIndividual/>} handleClick={() => setIndividual(true)} 
                             content="Sign in here if you're checking in to a storefront. Let's keep you safe." />
                         </Grid> 

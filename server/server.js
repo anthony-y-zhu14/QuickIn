@@ -329,15 +329,10 @@ app.post('/checkIn', (req, res) => {
 
 
 app.get("/businessData", function(req, res){
-
-    let data = "";
-    req.on('data', (chunk) => {
-        data = JSON.parse(chunk);
-        console.log(data)
-    });
+    let search = req.query.search? req.query.search: undefined;    
     req.on('end', () => {  
-    if (req.session.business) {
-        b_data.find({"businessId": data.businessId}, function(err, found){
+    if (req.session.business && search) {
+        b_data.find({"businessId": search}, function(err, found){
             if(err){
                 throw err;
             }

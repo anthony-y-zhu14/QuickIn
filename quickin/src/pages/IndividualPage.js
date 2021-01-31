@@ -149,7 +149,7 @@ export default function IndividualPage(action) {
                                 <React.Fragment>
                                     <Check />
                                     <h1>Thanks for checking in 😊</h1>
-                                    <Button variant='contained' color='primary' onClick={logout}>Exit</Button>
+                                    <Button variant='contained' color='primary' onClick={logout}>Done</Button>
                                 </React.Fragment>
                             )}
 

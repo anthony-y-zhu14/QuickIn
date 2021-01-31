@@ -51,7 +51,7 @@ export default function BusinessPage(action) {
 
     const fetchBusinessData = async() => {
         if (authenticated) {
-            const response = await fetch('/businessData');
+            const response = await fetch(`/businessData?search=${business.businessId}`);
             const data = response.json();
             console.log(data);
             return data;
@@ -60,7 +60,7 @@ export default function BusinessPage(action) {
 
     const checkAuth = async () => {
         const response = await fetch('/business/checkSession');
-        const data = await response.json();
+        const data = await response.json()
         if (data) {
             setAuth(true); 
         }  
