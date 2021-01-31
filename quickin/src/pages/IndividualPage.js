@@ -27,6 +27,7 @@ export default function IndividualPage(action) {
     const [visitor, setVisitor] = React.useState(undefined);
     const [scanResult, setResult] = React.useState(undefined);
     const [cameraReady, setCameraReady] = React.useState(false);
+    const [checkedIn, setCheckedIn] = React.useState(false);
     const classes = useStyles();
       
     useEffect(() => {
@@ -39,7 +40,20 @@ export default function IndividualPage(action) {
     })
 
     const checkIn = async() => {
-
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                businessId: scanResult.id,
+                visitorId: visitor.c_id,
+            })
+        };
+        const response = await fetch('/checkIn', requestOptions);
+        const data = await response.json();
+        if (data.message === 'success') {
+            setCheckedIn(true);
+            alert('Thanks for checking in 😊');
+        } 
     }
 
     const fetchVisitorData = async() => {
@@ -88,36 +102,48 @@ export default function IndividualPage(action) {
                 <Zoom in={true}>
                     <Container className={classes.main}>
                         <Paper elevation={3} className={classes.content}>
-                            <Typography variant='h5'>Welcome {visitor.firstName} {visitor.lastName}</Typography>
-                            <Grid container spacing={2}>  
-                                <Grid item xs={12}>
-                                    {cameraReady && !scanResult &&(
-                                         <Container className={classes.cameraWindow}>
-                                            <h1>Point the camera to the QR code</h1>
-                                            <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>                            
-                                        </Container>
-                                    )}
-                                    {scanResult &&(
-                                         <Container>
-                                            <h1>{scanResult.id}</h1>
-                                            <h1>Is this the correct resturant?</h1>
-                                            <ButtonGroup variant='contained' color='primary'>
-                                                <Button onClick={checkIn}>Yes</Button>    
-                                                <Button onClick={()=>setResult(undefined)}>No</Button> 
-                                            </ButtonGroup>                                                           
-                                        </Container>
-                                    )}
-                                    {!cameraReady && (
-                                        <Container>
-                                            <Button variant='contained' color='primary' onClick={()=>setCameraReady(true)}>I'm ready to scan</Button>
-                                        </Container>
-                                    )}
-                                    
-                                </Grid>   
-                                <Grid item xs={12}>
-                                    <Button variant='contained' color='primary' onClick={logout}>Log Out</Button>
-                                </Grid>                
-                            </Grid>
+                            {!checkedIn && (
+                                <React.Fragment>
+                                    <Typography variant='h5'>Welcome {visitor.firstName} {visitor.lastName}</Typography>
+                                    <Grid container spacing={2}>  
+                                        <Grid item xs={12}>
+                                            {cameraReady && !scanResult &&(
+                                                <Container className={classes.cameraWindow}>
+                                                    <h1>Point the camera to the QR code</h1>
+                                                    <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>                            
+                                                </Container>
+                                            )}
+                                            {scanResult &&(
+                                                <Container>
+                                                    <h1>{scanResult.name}</h1>
+                                                    <h1>Is this the correct resturant?</h1>
+                                                    <ButtonGroup variant='contained' color='primary'>
+                                                        <Button onClick={checkIn}>Yes, let me check in</Button>    
+                                                        <Button onClick={()=>setResult(undefined)}>No</Button> 
+                                                    </ButtonGroup>                                                           
+                                                </Container>
+                                            )}
+                                            {!cameraReady && (
+                                                <Container>
+                                                    <Button variant='contained' color='primary' onClick={()=>setCameraReady(true)}>I'm ready to scan</Button>
+                                                </Container>
+                                            )}                                    
+                                        </Grid>   
+                                        <Grid item xs={12}>
+                                            <Button variant='contained' color='primary' onClick={logout}>Log Out</Button>
+                                        </Grid>                
+                                    </Grid>
+                                </React.Fragment>
+                            )}
+
+                            {checkedIn && (
+                                <React.Fragment>
+                                    <h1>Thank you for checking In!</h1>
+                                    <Button variant='contained' color='primary' onClick={logout}>Exit</Button>
+                                </React.Fragment>
+                            )}
+
+                            
                         </Paper>              
                     </Container>
                 </Zoom>

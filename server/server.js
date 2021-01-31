@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const MemoryStore = require('memorystore')(session)
 const Business = require('./data_models/Business.js');
 const Visitor = require('./data_models/Visitor.js');
-const Business_Data = require('./data_models/Business_Data.js');
+const b_data = require('./data_models/Business_Data.js');
 
 const uri = 'mongodb+srv://joeMal:JDMdraZ3n@cluster0.pbfzk.mongodb.net/quickin?retryWrites=true&w=majority';
 mongoose.connect(uri, {
@@ -220,7 +220,7 @@ app.post('/business/register', (req, res) => {
     });
     
     
-    req.on('end', () => {        
+    req.on('end', () => {
 
         Business.findOne({"businessName": data.businessName.toLowerCase()}, function(err, found) {
             if(err) {
@@ -259,6 +259,86 @@ app.post('/business/register', (req, res) => {
             res.end();
         });
     });      
+});
+
+app.post('/checkIn', (req, res) => {
+
+    let data = "";
+    req.on('data', (chunk) => {
+        data = JSON.parse(chunk);
+    });
+    req.on('end', () => {         
+        if (req.session.user) {
+            Business.findOne({"businessId": data.businessId}, function(err, businessFound) {
+                if(err){
+                    throw err;
+                }
+                if(businessFound){                
+                    const _date = new Date();
+                    let currentTime = _date.toISOString();
+                    Visitor.findOne({"c_id": data.visitorId}, function(err, found){
+                        if (err){
+                            throw err;
+                        }
+                        if (found) {
+                        
+                            const newCheckIn = new b_data ({
+                                b_id: businessFound.businessId,
+                                timeOfVisit: currentTime,
+                                visitorFName: found.firstName,
+                                visitorLName: found.lastName,
+                                vistorNumber: found.phoneNumber
+                            });
+                    
+                            newCheckIn.save(function (error, document) {
+                                if(error) console.log(error)
+                                console.log(document)
+                            });    
+                            data = {message: "success"}       
+                            res.write(JSON.stringify(data));   
+                            res.end();
+                        }
+                    })                                                         
+                }
+                else{         
+                    data = 'Sorry, that business does not exist. 😢. Please try again.'       
+                    res.write(data);
+                    res.end();
+                }
+                
+            });
+        }        
+    });     
+});
+
+
+app.get("/businessData", function(req, res){
+
+    let data = "";
+    req.on('data', (chunk) => {
+        data = JSON.parse(chunk);
+        console.log(data)
+    });
+    req.on('end', () => {  
+    if (req.session.business) {
+        b_data.find({"businessId": data.businessId}, function(err, found){
+            if(err){
+                throw err;
+            }
+            if(found){                                  
+                res.statusCode = 200;
+                res.setHeader("Content-Type", "application/JSON");
+                res.write(JSON.stringify(found));          
+            }
+            else{
+                res.statusCode = 401;
+                res.setHeader("Content-Type", "application/JSON");
+                res.write('Nope.');
+            }
+            res.end();
+        });
+    }
+});
 });
 
 

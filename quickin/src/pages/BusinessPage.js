@@ -25,6 +25,8 @@ export default function BusinessPage(action) {
     const classes = useStyles();
     const [authenticated, setAuth] = React.useState(false);
     const [business, setBusiness] = React.useState(false);
+    const [businessData, setBusinessData] = React.useState(undefined);
+
 
     useEffect(() => {
         if (!authenticated) {
@@ -32,6 +34,9 @@ export default function BusinessPage(action) {
         }
         if(!business) {
             fetchBusiness().then((res)=>setBusiness(res));
+        }
+        if(!businessData) {
+            fetchBusinessData().then((res)=>setBusinessData(res));
         }
     })
 
@@ -41,8 +46,16 @@ export default function BusinessPage(action) {
             const data = response.json();
             console.log(data);
             return data;
-        }
-        
+        }  
+    }
+
+    const fetchBusinessData = async() => {
+        if (authenticated) {
+            const response = await fetch('/businessData');
+            const data = response.json();
+            console.log(data);
+            return data;
+        }  
     }
 
     const checkAuth = async () => {
@@ -60,19 +73,19 @@ export default function BusinessPage(action) {
             </React.Fragment>
         )
     }
-    if(authenticated && !business) {
+    if(authenticated && (!business || !businessData)) {
         return (
             <h1>Loading...</h1>
 
         )
     }
-    if(authenticated && business) {
+    if(authenticated && business && businessData) {
         return (
             <React.Fragment>
-                <Dashboard isAuthenticated={authenticated} busi={business}/>
+                <Dashboard isAuthenticated={authenticated} busi={business} visitsData={businessData}/>
             </React.Fragment>
         )
-    }
+    } 
 }
 
    

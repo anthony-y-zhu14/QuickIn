@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const business_data_schema = new Schema({
-    b_id: [
-        {
-            date: [
-                {c_id: String, time: String}
-            ]
-        }
-    ]
+const b_data_schema = new Schema({
+    b_id: String,
+    timeOfVisit: String,
+    visitorFName: String,
+    visitorLName: String,
+    vistorNumber: String
 })
 
-module.exports = mongoose.model('Business_Data', business_data_schema);
+module.exports = mongoose.model('b_data', b_data_schema);
 
