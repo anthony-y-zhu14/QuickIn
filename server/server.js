@@ -20,11 +20,11 @@ mongoose.connect(uri, {
 
   app.use(express.static(path.join(__dirname, '../')));
 
-// const publicPath = path.join(__dirname, '../quickin/build');
-// app.use(express.static(publicPath));
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-//   });
+const publicPath = path.join(__dirname, '../quickin/build');
+app.use(express.static(publicPath));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  });
 
 
     app.use(session({
@@ -335,7 +335,7 @@ app.get("/businessData", function(req, res){
     let search = req.query.search;   
     if (req.session.business) {
         console.log(search)
-        b_data.find({"b_id": "0e132b04-4126-422b-b81f-9f71e4eb3c5d"}, function(err, found){            
+        b_data.find({"b_id": search}, function(err, found){            
             if(err){
                 throw err;
             }
