@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {Typography, Container, Grid, Zoom, Button, Paper, LinearProgress } from '@material-ui/core';
+import {Typography, Container, Grid, Zoom, Button, Paper, ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import IndividualForm from '../components/IndividualForm.js';
 import QrReader from 'react-qr-reader'
@@ -19,13 +19,14 @@ const useStyles = makeStyles({
     cameraWindow: {
         margin: '5% auto',
         border: "5px solid black"
-    }
+    },
   });
 
 export default function IndividualPage(action) {
     const [authenicated, setAuth] = React.useState(false);
     const [visitor, setVisitor] = React.useState(undefined);
     const [scanResult, setResult] = React.useState(undefined);
+    const [cameraReady, setCameraReady] = React.useState(false);
     const classes = useStyles();
       
     useEffect(() => {
@@ -60,7 +61,7 @@ export default function IndividualPage(action) {
 
     const handleScan = (data) => {
         if (data) {
-            setResult(data);
+            setResult(JSON.parse(data));
         }
     }
 
@@ -73,21 +74,13 @@ export default function IndividualPage(action) {
         setAuth(false);
     }
     
-    if (!authenicated) {
+    if (!authenicated || !visitor) {
         return (
             <React.Fragment>
                 <IndividualForm goBack={action.goBack} auth={checkAuth}/>
             </React.Fragment>
         );
-    }  
-
-    if (!visitor) {
-        return (
-            <React.Fragment>
-                <LinearProgress/>
-            </React.Fragment>
-        );
-    } 
+    }   
 
     if (authenicated && visitor) {
         return (
@@ -98,11 +91,28 @@ export default function IndividualPage(action) {
                             <Typography variant='h5'>Welcome {visitor.firstName} {visitor.lastName}</Typography>
                             <Grid container spacing={2}>  
                                 <Grid item xs={12}>
-                                    <Container className={classes.cameraWindow}>
-                                        <h1>Point the camera to the QR code</h1>
-                                        <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>
-                                        <p>{scanResult}</p>
-                                    </Container>
+                                    {cameraReady && !scanResult &&(
+                                         <Container className={classes.cameraWindow}>
+                                            <h1>Point the camera to the QR code</h1>
+                                            <QrReader delay={300} onError={handleError} onScan={handleScan} style={{ width: '100%' }}/>                            
+                                        </Container>
+                                    )}
+                                    {scanResult &&(
+                                         <Container>
+                                            <h1>{scanResult.id}</h1>
+                                            <h1>Is this the correct resturant?</h1>
+                                            <ButtonGroup variant='contained' color='primary'>
+                                                <Button onClick={checkIn}>Yes</Button>    
+                                                <Button onClick={()=>setResult(undefined)}>No</Button> 
+                                            </ButtonGroup>                                                           
+                                        </Container>
+                                    )}
+                                    {!cameraReady && (
+                                        <Container>
+                                            <Button variant='contained' color='primary' onClick={()=>setCameraReady(true)}>I'm ready to scan</Button>
+                                        </Container>
+                                    )}
+                                    
                                 </Grid>   
                                 <Grid item xs={12}>
                                     <Button variant='contained' color='primary' onClick={logout}>Log Out</Button>

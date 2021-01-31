@@ -3,7 +3,7 @@ import {Fab, Typography, Container, Grid, Button, Paper, TextField, Box, AppBar,
 import { makeStyles } from '@material-ui/core/styles';
 import QRCode from "qrcode.react";
 
-export default function QRCard(value) { 
+export default function QRCard(value, code) { 
 
     const downloadQRCode = () => {
         const canvas = document.getElementById("canvas");
@@ -18,6 +18,9 @@ export default function QRCard(value) {
         document.body.removeChild(downloadLink);
     }
 
+    let qrValue = value.name;
+    console.log(code);
+
     return (
         <React.Fragment>
             <Grid container justify={'center'} alignItems={'center'}>
@@ -27,14 +30,15 @@ export default function QRCard(value) {
                     </Typography>
                     <Typography style={{textAlign: 'center'}} variant={'body2'}>
                         You may download this code and place it where your customers can see it.
-                        Simply get them to scan the QR Code and their contact information is recorded
+                        Simply get them to navigate to wwww.quickin.ca and 
+                        scan the QR Code and their contact information is recorded
                         and safely stored for your convenience.
                     </Typography>
                     <br />
                 </Grid>
                 <Grid item xs={2}>
                     <div id='qr-code'>
-                        <QRCode value="google.ca" id="canvas" />
+                        <QRCode value={value.value} id="canvas" />
                     </div>
                 </Grid>
                 <Grid container spacing={2} style={{margin: 10}} justify={'center'} alignItems={'center'}> 

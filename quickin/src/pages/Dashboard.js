@@ -46,19 +46,25 @@ root: {
 },
 }));
 
-export default function Dashboard() {
+export default function Dashboard(data) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
+
+    let businessData = {
+        name: data.busi.businessName,
+        id: data.busi.businessId
+    }
+
     return (
         <React.Fragment>
-            <Paper className={classes.form} elevation={3}>
+            <Paper className={classes.form} elevation={3} >
                 <Container maxWidth={'md'}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant={'h4'}>Welcome, Team Shonies</Typography>
+                            <Typography variant={'h4'}>Welcome, {data.busi.businessName}</Typography>
                         </Grid>        
                         <Grid item xs={12}>
                             <div className={classes.root}>
@@ -70,7 +76,7 @@ export default function Dashboard() {
                                     </Tabs>
                                 </AppBar>
                                 <TabPanel value={value} index={0}>
-                                    <QRCard />
+                                    <QRCard value={JSON.stringify(businessData)}/>
                                 </TabPanel>
                                 <TabPanel value={value} index={1}>
                                     <DataCard />

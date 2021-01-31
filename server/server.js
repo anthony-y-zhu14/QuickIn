@@ -132,7 +132,7 @@ mongoose.connect(uri, {
                         lastName: data.lastName,
                         phoneNumber: data.phoneNumber,
                         password: data.password,
-                        email: data.email
+                        email: data.email.toLowerCase()
                     });
     
                     newVisitor.save(function (error, document) {
@@ -151,33 +151,65 @@ mongoose.connect(uri, {
         });      
     });
 
+    app.get("/business", function(req, res){
+        let data = undefined;
+        if (req.session.business) {
+            Business.findOne({"email": req.session.business.toLowerCase()}, function(err, found){
+                if(err){
+                    throw err;
+                }
+                if(found){
+                    data = found;
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/JSON");
+                    res.write(JSON.stringify(data));
+                    console.log(data);
+                }
+                else{
+                    res.statusCode = 401;
+                    res.setHeader("Content-Type", "application/JSON");
+                    res.write(data);
+                }
+                res.end();
+            });
+        }
+    });
+
+    app.get("/business/checkSession", function(req, res){
+        let data = '';
+        if (req.session.business){
+            data = req.sessionID;  
+        }
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/JSON");
+        res.write(JSON.stringify(data));
+        res.end();
+    });
+
     app.post('/business/login', (req, res) => {
         let data = "";
         req.on('data', (chunk) => {
             data = JSON.parse(chunk);
         });
         req.on('end', () => {
-            console.log(data);
-            if(business[data.email] && business[data.email].password === data.password) {
-                req.session.user = business[data.email]['email'];
-                req.session.save();
-                const login_data = {
-                    authentication: true,
-                };
-                res.write(JSON.stringify(login_data));
-            }
-            else if(business[data.email] && business[data.email].password !== data.password) {
-            const login_data = {
-                authentication: 'passwordError',
-            };
-            res.write(JSON.stringify(login_data));
-            } else {
-                const login_data = {
-                    authentication: 'usernameError',
-                };
-                res.write(JSON.stringify(login_data));
-            }
-            res.end();
+
+            Business.findOne({"email": data.email.toLowerCase()}, function(err, found) {
+                if(err) {
+                    throw err;
+                }
+                if(found && found.password === data.password) {
+                    req.session.business = data.email;
+                    const login_data = {
+                        authentication: true,
+                    };
+                    res.write(JSON.stringify(login_data));
+                }
+                else {
+                    console.log('Incorrect login');
+                }
+                res.end();
+            });
+            
         });        
     });
 
@@ -209,7 +241,7 @@ app.post('/business/register', (req, res) => {
                     province: data.province,
                     country: 'Canada',
                     businessId: uuidv4(),
-                    businessKey: data.businessName + businessId
+                    businessKey: data.businessName
                 });
 
                 newBusiness.save(function (error, document) {
@@ -217,7 +249,7 @@ app.post('/business/register', (req, res) => {
                     console.log(document)
                 });
 
-                req.session.user = business[data.email].email;
+                req.session.business = data.email;
                 req.session.save();
                 const login_data = {
                     authentication: true,
@@ -228,7 +260,6 @@ app.post('/business/register', (req, res) => {
         });
     });      
 });
-
 
 
 

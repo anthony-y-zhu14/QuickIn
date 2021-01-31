@@ -24,15 +24,29 @@ const useStyles = makeStyles({
 export default function BusinessPage(action) {
     const classes = useStyles();
     const [authenticated, setAuth] = React.useState(false);
+    const [business, setBusiness] = React.useState(false);
 
     useEffect(() => {
         if (!authenticated) {
             checkAuth();
         }
+        if(!business) {
+            fetchBusiness().then((res)=>setBusiness(res));
+        }
     })
 
+    const fetchBusiness = async() => {
+        if (authenticated) {
+            const response = await fetch('/business');
+            const data = response.json();
+            console.log(data);
+            return data;
+        }
+        
+    }
+
     const checkAuth = async () => {
-        const response = await fetch('/visitor/checkSession');
+        const response = await fetch('/business/checkSession');
         const data = await response.json();
         if (data) {
             setAuth(true); 
@@ -42,14 +56,20 @@ export default function BusinessPage(action) {
     if(!authenticated) {
         return (
             <React.Fragment>
-                <BusinessForm goBack={action.goBack}/>
+                <BusinessForm goBack={action.goBack} auth={checkAuth}/>
             </React.Fragment>
         )
     }
-    if(authenticated) {
+    if(authenticated && !business) {
+        return (
+            <h1>Loading...</h1>
+
+        )
+    }
+    if(authenticated && business) {
         return (
             <React.Fragment>
-                <Dashboard/>
+                <Dashboard isAuthenticated={authenticated} busi={business}/>
             </React.Fragment>
         )
     }
