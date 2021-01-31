@@ -97,6 +97,7 @@ export default function CustomPaginationActionsTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  createData('Date Visited', 'First Name', 'Last Name', 'Phone Number');
   const rows = props.data.map(data =>
     createData(data.timeOfVisit, data.visitorFName, data.visitorLName, data.vistorNumber)
   )

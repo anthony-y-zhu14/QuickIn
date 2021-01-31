@@ -50,9 +50,12 @@ export default function BusinessPage(action) {
     }
 
     const fetchBusinessData = async() => {
-        if (authenticated && business) {
-            const response = await fetch(`/businessData?search=${business.businessId}`);
-            const data = response.json();
+
+        if (business && authenticated) {
+            let url = `/businessData?search=${business.businessId}`
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log(data)
             return data;
         }  
     }

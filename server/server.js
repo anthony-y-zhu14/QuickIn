@@ -18,13 +18,13 @@ mongoose.connect(uri, {
   console.log('MongoDB Connected…')
   const db = mongoose.connection
 
-//   app.use(express.static(path.join(__dirname, '../')));
+  app.use(express.static(path.join(__dirname, '../')));
 
-const publicPath = path.join(__dirname, '../quickin/build');
-app.use(express.static(publicPath));
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../build', 'index.html'));
-  });
+// const publicPath = path.join(__dirname, '../quickin/build');
+// app.use(express.static(publicPath));
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   });
 
 
     app.use(session({
@@ -174,13 +174,16 @@ app.get('/', (req, res) => {
                     res.setHeader("Content-Type", "application/JSON");
                     res.write(JSON.stringify(data));
                     console.log(data);
+                    res.end();
+
                 }
                 else{
                     res.statusCode = 401;
                     res.setHeader("Content-Type", "application/JSON");
                     res.write(data);
+                    res.end();
+
                 }
-                res.end();
             });
         }
     });
@@ -329,14 +332,15 @@ app.post('/checkIn', (req, res) => {
 
 
 app.get("/businessData", function(req, res){
-    let search = req.query.search? req.query.search: undefined;    
-    req.on('end', () => {  
-    if (req.session.business && search) {
-        b_data.find({"businessId": search}, function(err, found){
+    let search = req.query.search;   
+    if (req.session.business) {
+        console.log(search)
+        b_data.find({"b_id": "0e132b04-4126-422b-b81f-9f71e4eb3c5d"}, function(err, found){            
             if(err){
                 throw err;
             }
-            if(found){                                  
+            if(found){   
+                console.log(found);                               
                 res.statusCode = 200;
                 res.setHeader("Content-Type", "application/JSON");
                 res.write(JSON.stringify(found));          
@@ -349,7 +353,6 @@ app.get("/businessData", function(req, res){
             res.end();
         });
     }
-});
 });
 
 
