@@ -20,6 +20,9 @@ https://quickin.herokuapp.com
 Their contact data is then automatically added to our database where the business can access the information whenever they like! 
 
 
+## Technology Stack:
 
-
-
+Frontend: React
+Backend: NodeJs Server
+Database: MongoDB, Mongoose
+Libraries: @material-ui, mongoose, react-qr-reader, qrcode.react
